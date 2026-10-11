@@ -39,16 +39,16 @@ Item {
             color: "#e8cfa3"
         },
         hour: {
-            char: "/",
-            size: 10,
-            offsetX: 0,
+            char: "'",
+            size: 9,
+            offsetX: -1,
             offsetY: 3.7,
             color: "#d9c8b1",
             spacing: 4,
-            start: 12,
+            start: 6,
             length: 0.7,
-            // width: 3
-            rotationOffset: Math.PI
+            width: 2
+            // rotationOffset: Math.PI
         },
     
         minute: {

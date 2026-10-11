@@ -38,12 +38,10 @@ PanelWindow {
     }
 
     function timerStatus(): string {
-      return JSON.stringify({
-        running: TimerState.running,
-        paused: TimerState.paused,
-        remaining: TimerState.formattedRemaining,
-        progress: TimerState.progress
-      })
+      return "running=" + TimerState.running
+        + " paused=" + TimerState.paused
+        + " remaining=" + TimerState.formattedRemaining
+        + " progress=" + TimerState.progress
     }
   }
 
