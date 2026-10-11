@@ -99,9 +99,9 @@ PanelWindow {
         TimerState.progress.toFixed(3)
       )
     }
-  }
 
-  function onFinished() {
-    console.log("Timer finished!")
+    function onFinished() {
+      console.log("Timer finished!")
+    }
   }
 }

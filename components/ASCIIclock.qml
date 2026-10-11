@@ -185,7 +185,7 @@ Item {
             angle
           )
         } else {
-            glyph(styleName, x, y, angle + style.rotationOffset ?? 0)
+            glyph(styleName, x, y, angle + (style.rotationOffset ?? 0))
         }
       }
     }

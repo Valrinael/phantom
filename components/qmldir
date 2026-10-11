@@ -1,2 +1,1 @@
-singleton TimeState 1.0 TimeState.qml
-singleton TimerState 1.0 TimerState.qml
+ASCIIclock 1.0 ASCIIclock.qml
