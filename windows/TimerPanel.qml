@@ -84,23 +84,27 @@ PanelWindow {
 
       Item {
         width: parent.width
-        height: parent.height - 12
+        height: parent.height - 28
 
         Item {
           anchors.fill: parent
           visible: UiState.panelMode === "clock"
 
           ASCIIclock {
-            anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height)
-            height: width
-            expanded: true
+              anchors.centerIn: parent
+              anchors.verticalCenterOffset: -18
+
+              width: Math.min(parent.width, parent.height)
+              height: width
+              expanded: true
           }
 
           TimerProgress {
-            anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height)
-            height: width
+              anchors.centerIn: parent
+              anchors.verticalCenterOffset: -18
+
+              width: Math.min(parent.width, parent.height)
+              height: width
           }
         }
 

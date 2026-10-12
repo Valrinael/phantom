@@ -23,7 +23,29 @@ Singleton {
   ? Math.max(0, Math.min(1,
   1 - remainingMs / durationMs))
   : 0
+  // Duration selected in the UI, independent of an active timer.
+  property int selectedDurationSeconds: 300
 
+  readonly property string formattedSelection: {
+    const total = selectedDurationSeconds
+    const hours = Math.floor(total / 3600)
+    const minutes = Math.floor((total % 3600) / 60)
+    const seconds = total % 60
+
+    return String(hours).padStart(2, "0") + ":"
+    + String(minutes).padStart(2, "0") + ":"
+    + String(seconds).padStart(2, "0")
+  }
+
+  function setSelectedDuration(seconds) {
+    selectedDurationSeconds = Math.max(
+      0, Math.min(359999, Math.floor(seconds))
+    )
+  }
+
+  function startSelected() {
+    start(selectedDurationSeconds)
+  }
   // Display-friendly remaining time.
   readonly property int remainingSeconds:
   Math.ceil(remainingMs / 1000)

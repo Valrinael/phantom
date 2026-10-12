@@ -11,6 +11,7 @@ Singleton {
         precision: SystemClock.Seconds
     }
 
+
     readonly property date now: clock.date
     readonly property int hours: now.getHours()
     readonly property int minutes: now.getMinutes()

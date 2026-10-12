@@ -2,3 +2,4 @@ ASCIIclock 1.0 ASCIIclock.qml
 TimerProgress 1.0 TimerProgress.qml
 TimerControls 1.0 TimerControls.qml
 PhantomButton 1.0 PhantomButton.qml
+TimeInput 1.0 TimeInput.qml
