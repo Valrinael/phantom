@@ -16,10 +16,8 @@ PanelWindow {
   }
 
   margins {
-    top: UiState.barVisible
-    ? UiState.barHeight + 12
-    : 12
-    right: 5
+    top: UiState.effectivePanelTopMargin
+    right: UiState.panelRightMargin
   }
 
   implicitWidth: UiState.panelWidth
@@ -34,23 +32,82 @@ PanelWindow {
   Rectangle {
     anchors.fill: parent
     radius: 12
-    color: "#F217151B"
+    color: ThemeState.background
     border.color: "#706575"
     border.width: 1
 
-    Item {
-      anchors.centerIn: parent
+    Column {
+      anchors.fill: parent
+      anchors.margins: 16
+      spacing: 2
 
-      width: Math.min(parent.width, parent.height) - 24
-      height: width
+      Row {
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 0
 
-      ASCIIclock {
-        anchors.fill: parent
-        expanded: true
+        Text {
+          text: "["
+          color: ThemeState.muted
+          font.family: "GeistMono Nerd Font"
+          font.pixelSize: 12
+          anchors.verticalCenter: parent.verticalCenter
+        }
+
+        PhantomButton {
+          text: "C"
+          selected: UiState.panelMode === "clock"
+          onClicked: UiState.showClockMode()
+        }
+
+        Text {
+          text: "|"
+          color: ThemeState.muted
+          font.family: "GeistMono Nerd Font"
+          font.pixelSize: 12
+          anchors.verticalCenter: parent.verticalCenter
+        }
+
+        PhantomButton {
+          text: "T"
+          selected: UiState.panelMode === "timer"
+          onClicked: UiState.showTimerMode()
+        }
+
+        Text {
+          text: "]"
+          color: ThemeState.muted
+          font.family: "GeistMono Nerd Font"
+          font.pixelSize: 12
+          anchors.verticalCenter: parent.verticalCenter
+        }
       }
 
-      TimerProgress {
-        anchors.fill: parent
+      Item {
+        width: parent.width
+        height: parent.height - 12
+
+        Item {
+          anchors.fill: parent
+          visible: UiState.panelMode === "clock"
+
+          ASCIIclock {
+            anchors.centerIn: parent
+            width: Math.min(parent.width, parent.height)
+            height: width
+            expanded: true
+          }
+
+          TimerProgress {
+            anchors.centerIn: parent
+            width: Math.min(parent.width, parent.height)
+            height: width
+          }
+        }
+
+        TimerControls {
+          anchors.centerIn: parent
+          visible: UiState.panelMode === "timer"
+        }
       }
     }
   }

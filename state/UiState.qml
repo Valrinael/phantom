@@ -21,6 +21,13 @@ Singleton {
   property int clockRightMargin: 5
   property int clockBarGap: 12
 
+  property int panelRightMargin: 5
+  property int panelTopMargin: 5
+  property int panelGap: 8
+
+  readonly property int effectivePanelTopMargin:
+    panelTopMargin + (barVisible ? barHeight : 0)
+
   readonly property int effectiveClockTopMargin:
   clockTopMargin
   + (barVisible ? barHeight + clockBarGap : 0)
@@ -39,5 +46,20 @@ Singleton {
 
   function toggleContrast() {
     highContrast = !highContrast
+  }
+
+  // Timer subpanel
+  property bool timerSubPanelVisible: false
+
+  function toggleTimerSubPanel() {
+      timerSubPanelVisible = !timerSubPanelVisible
+  }
+  
+  function showClockMode() {
+      panelMode = "clock"
+  }
+  
+  function showTimerMode() {
+      panelMode = "timer"
   }
 }

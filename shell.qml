@@ -54,6 +54,18 @@ Scope {
       function togglePanel(): void {
           UiState.togglePanel()
       }
+
+      function toggleTimerSubPanel(): void {
+          UiState.toggleTimerSubPanel()
+      }
+
+      function timerMode(): void {
+          UiState.showTimerMode()
+      }
+
+      function clockMode(): void {
+          UiState.showClockMode()
+      }
     }
 
     anchors {
@@ -103,4 +115,6 @@ Scope {
   PhantomBar {}
 
   TimerPanel {}
+
+  TimerSubPanel {}
 }
