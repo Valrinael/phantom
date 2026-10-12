@@ -4,114 +4,117 @@ import QtQuick
 import Quickshell
 
 Singleton {
-    id: root
+  id: root
+  property real startAngle: 0
+  // --- Timer state ---
 
-    // --- Timer state ---
+  property int durationMs: 0
+  property int remainingMs: 0
 
-    property int durationMs: 0
-    property int remainingMs: 0
+  property bool running: false
+  property bool paused: false
 
-    property bool running: false
-    property bool paused: false
+  // Absolute deadline while running.
+  property double deadlineMs: 0
 
-    // Absolute deadline while running.
-    property double deadlineMs: 0
+  // Progress: 0 = just started, 1 = complete.
+  readonly property real progress:
+  durationMs > 0
+  ? Math.max(0, Math.min(1,
+  1 - remainingMs / durationMs))
+  : 0
 
-    // Progress: 0 = just started, 1 = complete.
-    readonly property real progress:
-        durationMs > 0
-            ? Math.max(0, Math.min(1,
-                1 - remainingMs / durationMs))
-            : 0
+  // Display-friendly remaining time.
+  readonly property int remainingSeconds:
+  Math.ceil(remainingMs / 1000)
 
-    // Display-friendly remaining time.
-    readonly property int remainingSeconds:
-        Math.ceil(remainingMs / 1000)
+  readonly property string formattedRemaining: {
+    const total = remainingSeconds
+    const hours = Math.floor(total / 3600)
+    const minutes = Math.floor((total % 3600) / 60)
+    const seconds = total % 60
 
-    readonly property string formattedRemaining: {
-        const total = remainingSeconds
-        const hours = Math.floor(total / 3600)
-        const minutes = Math.floor((total % 3600) / 60)
-        const seconds = total % 60
+    const mm = String(minutes).padStart(2, "0")
+    const ss = String(seconds).padStart(2, "0")
 
-        const mm = String(minutes).padStart(2, "0")
-        const ss = String(seconds).padStart(2, "0")
+    return hours > 0
+    ? hours + ":" + mm + ":" + ss
+    : mm + ":" + ss
+  }
 
-        return hours > 0
-            ? hours + ":" + mm + ":" + ss
-            : mm + ":" + ss
+  signal finished()
+
+  // --- Countdown update ---
+
+  Timer {
+    id: ticker
+    interval: 100
+    repeat: true
+    running: root.running
+
+    onTriggered: root.updateRemaining()
+  }
+
+  function updateRemaining() {
+    if (!running)
+    return
+
+    remainingMs = Math.max(
+      0,
+      deadlineMs - Date.now()
+    )
+
+    if (remainingMs <= 0) {
+      running = false
+      paused = false
+      finished()
     }
+  }
 
-    signal finished()
+  // --- Controls ---
 
-    // --- Countdown update ---
+  function start(seconds) {
+    if (seconds <= 0)
+    return
 
-    Timer {
-        id: ticker
-        interval: 100
-        repeat: true
-        running: root.running
+    durationMs = Math.round(seconds * 1000)
+    remainingMs = durationMs
 
-        onTriggered: root.updateRemaining()
-    }
+    const now = new Date()
+    startAngle = (now.getMinutes() + now.getSeconds() / 60) * Math.PI / 30
 
-    function updateRemaining() {
-        if (!running)
-            return
+    deadlineMs = Date.now() + durationMs
 
-        remainingMs = Math.max(
-            0,
-            deadlineMs - Date.now()
-        )
+    paused = false
+    running = true
+  }
 
-        if (remainingMs <= 0) {
-            running = false
-            paused = false
-            finished()
-        }
-    }
+  function pause() {
+    if (!running)
+    return
 
-    // --- Controls ---
+    updateRemaining()
 
-    function start(seconds) {
-        if (seconds <= 0)
-            return
+    running = false
+    paused = remainingMs > 0
+  }
 
-        durationMs = Math.round(seconds * 1000)
-        remainingMs = durationMs
+  function resume() {
+    if (!paused || remainingMs <= 0)
+    return
 
-        deadlineMs = Date.now() + durationMs
+    deadlineMs = Date.now() + remainingMs
 
-        paused = false
-        running = true
-    }
+    paused = false
+    running = true
+  }
 
-    function pause() {
-        if (!running)
-            return
+  function reset() {
+    running = false
+    paused = false
 
-        updateRemaining()
-
-        running = false
-        paused = remainingMs > 0
-    }
-
-    function resume() {
-        if (!paused || remainingMs <= 0)
-            return
-
-        deadlineMs = Date.now() + remainingMs
-
-        paused = false
-        running = true
-    }
-
-    function reset() {
-        running = false
-        paused = false
-
-        durationMs = 0
-        remainingMs = 0
-        deadlineMs = 0
-    }
+    durationMs = 0
+    remainingMs = 0
+    deadlineMs = 0
+  }
 }

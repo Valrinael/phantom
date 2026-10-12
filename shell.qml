@@ -57,8 +57,8 @@ PanelWindow {
     right: 5
   }
 
-  implicitWidth: 140
-  implicitHeight: 140
+  implicitWidth: 180
+  implicitHeight: 180
 
   exclusionMode: ExclusionMode.Ignore
   focusable: false
@@ -84,22 +84,9 @@ PanelWindow {
     ASCIIclock {
       anchors.fill: parent
     }
-  }
 
-  Connections {
-    target: TimerState
-
-    function onRemainingSecondsChanged() {
-      console.log(
-        "Timer:",
-        TimerState.formattedRemaining,
-        "Progress:",
-        TimerState.progress.toFixed(3)
-      )
-    }
-
-    function onFinished() {
-      console.log("Timer finished!")
+    TimerProgress {
+      anchors.fill: parent
     }
   }
 }
