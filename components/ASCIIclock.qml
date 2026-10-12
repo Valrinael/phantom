@@ -4,6 +4,8 @@ import "../state"
 Item {
   id: root
 
+  property bool expanded: false
+
   // Visual settings
   property color dialColor: "#817486"
   property color markerColor: "#c6a56b"
@@ -99,7 +101,7 @@ Item {
 
       const cx = width / 2
       const cy = height / 2
-      const radius = Math.min(width, height) * 0.40
+      const radius = Math.min(width, height) * (root.expanded ? 0.39 : 0.40)
 
       // Helper: draw one character at a position.
       function glyph(styleName, x, y, rotation = 0) {
@@ -139,15 +141,31 @@ Item {
         const x = cx + Math.sin(angle) * radius
         const y = cy - Math.cos(angle) * radius
 
-        const markerInterval = root.glyphCount / 12
-        const hourIndex = Math.round(i / markerInterval)
+        if (!root.expanded) {
+          const markerInterval = root.glyphCount / 12
+          const hourIndex = Math.round(i / markerInterval)
 
-        if (i % markerInterval === 0) {
-          const cardinal = hourIndex % 3 === 0
+          if (i % markerInterval === 0) {
+            const cardinal = hourIndex % 3 === 0
+            glyph(cardinal ? "cardinal" : "marker", x, y)
+          } else {
+            glyph("dial", x, y)
+          }
 
+          continue
+        }
+
+        // Expanded dial: 120 positions, 60 true second marks.
+        if (i % 10 === 0) {
+          const cardinal = i % 30 === 0
           glyph(cardinal ? "cardinal" : "marker", x, y)
-        } else {
+        } else if (i % 2 === 0) {
           glyph("dial", x, y)
+        } else {
+          ctx.save()
+          ctx.globalAlpha = 0.30
+          glyph("dial", x, y)
+          ctx.restore()
         }
       }
 
@@ -196,7 +214,7 @@ Item {
       const s = root.now.getSeconds()
 
       const hourAngle =
-      (h + m / 60) * Math.PI / 6
+        (h + m / 60 + s / 3600) * Math.PI / 6
 
       const minuteAngle =
       (m + s / 60) * Math.PI / 30
